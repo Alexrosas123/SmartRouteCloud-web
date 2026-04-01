@@ -2,7 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>Dashboard Logística</title>
+
+  <!-- 🔥 Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -17,8 +29,13 @@
     <li>Retrasados: <span id="retrasados">0</span></li>
   </ul>
 
-  <h3>Envíos</h3>
-  <ul id="listaEnvios"></ul>
+  <h3>Mapa de envíos</h3>
+
+  <!-- 🔥 CONTENEDOR DEL MAPA -->
+  <div id="map"></div>
+
+  <!-- 🔥 Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <script type="module" src="../js/dashboard.js"></script>
 </body>

@@ -12,7 +12,7 @@ btn.addEventListener("click", async () => {
     await login(email.value, password.value);
 
     // 🔥 REDIRECCIÓN
-    window.location.href = "/dashboard";
+   window.location.href = "/html/dashboard.html";
 
   } catch (e) {
     error.textContent = "Correo o contraseña incorrectos";
