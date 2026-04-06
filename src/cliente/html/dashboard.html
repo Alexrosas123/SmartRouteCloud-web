@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.20.0/maps/maps.css">
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.20.0/maps/maps-web.min.js"></script>
   <meta charset="UTF-8">
-  <title>Dashboard Logística</title>
-
-  <!-- 🔥 Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-  <style>
-    #map {
-      height: 400px;
-      width: 100%;
-      margin-top: 20px;
-      border-radius: 10px;
-    }
-  </style>
+  <title>Inicio</title>
 </head>
 <body>
 
-  <h1>📦 Dashboard Logística</h1>
+  <h1> Dashboard </h1>
 
   <button id="logout">Cerrar sesión</button>
 
@@ -31,12 +21,15 @@
 
   <h3>Mapa de envíos</h3>
 
-  <!-- 🔥 CONTENEDOR DEL MAPA -->
-  <div id="map"></div>
+  <div id="map" style="height: 400px;"></div>
 
-  <!-- 🔥 Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  
+
+
+  
 
   <script type="module" src="../js/dashboard.js"></script>
+  <script type="module" src="../js/tomtomAPI.js"></script>
 </body>
 </html>

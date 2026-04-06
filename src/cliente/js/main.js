@@ -11,7 +11,7 @@ btn.addEventListener("click", async () => {
   try {
     await login(email.value, password.value);
 
-    // 🔥 REDIRECCIÓN
+    //  REDIRECCIÓN
    window.location.href = "/html/dashboard.html";
 
   } catch (e) {

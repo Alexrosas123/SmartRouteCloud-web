@@ -1,60 +1,33 @@
-import { logout, observarUsuario } from "./auth.js";
+import { iniciarMapa } from "./tomtomAPI.js";
+import { calcularRuta } from "./tomtomAPI.js";
 
-// 🔐 PROTEGER
-observarUsuario((user) => {
-  if (!user) {
-    window.location.href = "/";
-  }
-});
+const map = iniciarMapa();
 
-// LOGOUT
-document.getElementById("logout").addEventListener("click", () => {
-  logout();
-  window.location.href = "/";
-});
 
-// 📦 DATOS DE EJEMPLO (CDMX)
-const envios = [
-  { id: "ML1001", estado: "En tránsito", lat: 19.4326, lng: -99.1332 },
-  { id: "ML1002", estado: "Entregado", lat: 19.427, lng: -99.1677 },
-  { id: "ML1003", estado: "Retrasado", lat: 19.41, lng: -99.15 },
-  { id: "ML1004", estado: "En tránsito", lat: 19.44, lng: -99.14 }
-];
 
-// 📊 CONTADORES
-let transito = 0, entregados = 0, retrasados = 0;
 
-// 🗺️ INICIALIZAR MAPA
-const map = L.map('map').setView([19.4326, -99.1332], 12);
 
-// 🌍 MAPA BASE
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18,
-}).addTo(map);
 
-// 📍 MARCADORES
-envios.forEach(e => {
+async function mostrarRuta() {
+  const origen = "-99.1332,19.4326";
+  const destino = "-99.1677,19.427";
 
-  let color = "blue";
+  const ruta = await calcularRuta(origen, destino);
 
-  if (e.estado === "Entregado") color = "green";
-  if (e.estado === "Retrasado") color = "red";
+  console.log(ruta);
+  
+}
 
-  // marcador
-  const marker = L.marker([e.lat, e.lng]).addTo(map);
 
-  marker.bindPopup(`
-    <b>${e.id}</b><br>
-    Estado: ${e.estado}
-  `);
+export function agregarMarcador(map, lat, lng, texto) {
+  new tt.Marker()
+    .setLngLat([lng, lat])
+    .setPopup(new tt.Popup().setText(texto))
+    .addTo(map);
+}
 
-  // contadores
-  if (e.estado === "En tránsito") transito++;
-  if (e.estado === "Entregado") entregados++;
-  if (e.estado === "Retrasado") retrasados++;
-});
 
-// 📊 MOSTRAR DATOS
-document.getElementById("transito").textContent = transito;
-document.getElementById("entregados").textContent = entregados;
-document.getElementById("retrasados").textContent = retrasados;
+mostrarRuta();
+agregarMarcador(map, 19.4326, -99.1332, "Paquete 1");
+agregarMarcador(map, 19.427, -99.1677, "Paquete 2");
+
