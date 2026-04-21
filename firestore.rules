@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // TI can read/write all users
+      allow read, write: if hasRole('TI');
+
+      // Users can read their own document
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+
+      // Admins can read their assigned choferes
+      allow read: if hasRole('ADMIN') &&
+        resource.data.adminAsignado == request.auth.uid;
+    }
+
+    // Routes collection
+    match /routes/{routeId} {
+      // TI can read/write all routes
+      allow read, write: if hasRole('TI');
+
+      // Admins can read/write routes they created or that belong to their choferes
+      allow read, write: if hasRole('ADMIN') &&
+        (resource.data.creadoPor == request.auth.uid ||
+         get(/databases/$(database)/documents/users/$(resource.data.choferAsignado)).data.adminAsignado == request.auth.uid);
+
+      allow create: if hasRole('ADMIN');
+
+      // Choferes can read routes assigned to them
+      allow read: if hasRole('CHOFER') &&
+        resource.data.choferAsignado == request.auth.uid;
+
+      // Choferes can update only the entregas field of their own routes
+      allow update: if hasRole('CHOFER') &&
+        resource.data.choferAsignado == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['entregas', 'updatedAt']);
+    }
+  }
+}
