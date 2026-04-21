@@ -1,9 +1,25 @@
+require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 
-const app = express();
+const choferRoutes = require("./servidor/routes/chofer");
+const adminRoutes = require("./servidor/routes/admin");
+const tiRoutes = require("./servidor/routes/ti");
 
-// Servir archivos estáticos
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// API Routes
+app.use("/api/chofer", choferRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/ti", tiRoutes);
+
+// Servir archivos estáticos (frontend intacto)
 app.use(express.static(path.join(__dirname, "cliente")));
 
 // Ruta principal
@@ -16,6 +32,11 @@ app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "cliente/html/dashboard.html"));
 });
 
-app.listen(3000, () => {
-  console.log("Servidor en http://localhost:3000");
+// 404 handler for unknown API routes
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "Endpoint no encontrado" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor en http://localhost:${PORT}`);
 });
